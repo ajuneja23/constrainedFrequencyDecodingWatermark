@@ -14,6 +14,7 @@ def constrained_inference(
     with torch.no_grad():
         model = model.to(device)
         tokens = tokenizer(prompt, return_tensors="pt")
+        tokens = tokens.to(device)
         new_toks = 0
         cur_tok = None
         while new_toks <= max_new_toks and cur_tok != tokenizer.eos_token_id:
@@ -26,10 +27,11 @@ def constrained_inference(
                 [tokens["attention_mask"], torch.tensor([[1]]).to(device)], dim=1
             )
             new_toks += 1
+            cur_tok = int(cur_tok)
             constrain_dict[cur_tok] -= 1
             if new_toks >= window_size:
-                constrain_dict[tokens["input_ids"][0][-window_size]] += 1
-        return tokenizer.decode(tokens["input_ids"][0])
+                constrain_dict[int(tokens["input_ids"][0][-window_size])] += 1
+        return tokenizer.decode(tokens["input_ids"][0]), tokens["input_ids"][0].tolist()
 
 
 def oneTokenInfer(
@@ -47,8 +49,6 @@ def oneTokenInfer(
         logits = logits.squeeze()
         for token, freq in constrain_dict.items():
             if freq == 0:
-                logits[token] = 0
-        if torch.sum(logits) == 0:
-            raise ValueError("No tokens available")
-        logits = logits / torch.sum(logits)
+                logits[token] = -float("inf")
+        logits = torch.softmax(logits, dim=0)
         return logits

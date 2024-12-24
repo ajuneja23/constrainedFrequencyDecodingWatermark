@@ -15,3 +15,5 @@ if not os.path.exists(model_path):
 else:
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     model = AutoModelForCausalLM.from_pretrained(model_path).to(device)
+print(tokenizer.get_vocab()["I"])
+print(tokenizer.get_vocab()["love"])

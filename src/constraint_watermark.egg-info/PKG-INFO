@@ -1,3 +1,17 @@
+Metadata-Version: 2.1
+Name: constraint-watermark
+Version: 0.1.0
+Summary: A library for watermarking large language models via a sliding window frequency constraint through constrained decoding.
+Home-page: https://github.com/ajuneja23/constrained-inference
+Author: Aadit Juneja
+Author-email: aadit.juneja12@gmail.com
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+
 # Watermarking Language Models via a Frequency Based Constrained Decoding Mechanism
 
 Constrained Decoding has often been used as a technique to ensure robust structured outputs by language models, but in this project we explore its usage in the setting of watermarking language model responses as an inference-time technique. A user can ensure that each sliding window of a given size has a maximum frequency of a certain token adhering to user input. Users can simply create dictionaries of constraints on token frequencies, and language model responses will adhere to these in any given sliding window in the response.
